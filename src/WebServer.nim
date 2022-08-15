@@ -16,6 +16,15 @@ func newCompany(name = ""): Company =
 func newEmployee(firstName = "", lastName = "", company = newCompany()): Employee =
   Employee(firstName: firstName, lastName: lastName, company: company)
 
+let dbConn = open(":memory:", "", "", "")
+
 routes:
   get "/":
     resp h1("Welcome to the server!")
+  post "/deploy":
+    dbConn.createTables(newEmployee())
+    var ibmCorp = newCompany("IBM")
+    var fooBar = newCompany("Baz")
+    var employees = [newEmployee("Employee one name", "Employee one last name", ibmCorp), newEmployee("Employee two name", "Employee two last name", fooBar)]
+    dbConn.insert(employees)
+    resp "Deployment complete."
