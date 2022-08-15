@@ -1,6 +1,7 @@
 import htmlgen
 import jester
 import norm/[model, sqlite]
+import json
 
 # Typedefs for domain model
 type
@@ -28,3 +29,7 @@ routes:
     var employees = [newEmployee("Employee one name", "Employee one last name", ibmCorp), newEmployee("Employee two name", "Employee two last name", fooBar)]
     dbConn.insert(employees)
     resp "Deployment complete."
+  get "/employees":
+    var employees = @[newEmployee()]
+    dbConn.select(employees, "Employee.firstName = ?", "Employee one name")
+    resp %*employees
